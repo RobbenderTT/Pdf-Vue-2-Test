@@ -1,27 +1,36 @@
 <template>
-  <div id="app">
-    <PDFTEST />
-  </div>
+<b-container>
+  <b-row>
+    <b-col>
+      <div id="app">
+        <PdfTest />
+    <!-- <b-button variant='success' @click="makePdf">Make PDF</b-button> -->
+    </div>
+    </b-col>
+  </b-row>
+  </b-container>
 </template>
 
 <script>
-import PDFTEST from './components/PdfTEST.vue'
+import PdfTest from "./components/PdfTEST.vue";
+// import jspdf from 'jspdf'
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    PDFTEST
-  }
+    PdfTest,
+  },
 }
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  /* background-color: black; */
+  padding: 50px;
 }
 </style>
