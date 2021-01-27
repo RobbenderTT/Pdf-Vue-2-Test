@@ -1,7 +1,7 @@
 <template>
 <b-container>
   <div class="">
-    <h2 ref="content">Client PDF</h2>
+    <h2 id="title" ref="content">Somebody's PDF</h2>
   <b-row>
     <b-col>
       <b-alert 
@@ -38,15 +38,16 @@
       <br>
       <br>
       <div class="text-left">
-          <b-form-group label="Individual radios" v-slot="{ ariaDescribedby }">
-            <b-form-radio v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="A">Option A</b-form-radio>
-            <b-form-radio v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="B">Option B</b-form-radio>
+          <b-form-group label="Sex" v-slot="{ ariaDescribedby }">
+            <b-form-radio v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="M">Male</b-form-radio>
+            <b-form-radio v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="F">Female</b-form-radio>
           </b-form-group>
-          <div class="mt-3">Selected: <strong>{{ selected }}</strong></div>
+          <div class="mt-3">Choice: <strong>{{ selected }}</strong></div>
         <br>
        <div>
-          <b-form-select v-model="selectedOpt" :options="options"></b-form-select>
-          <div class="mt-3">Selected: <strong>{{ selectedOpt }}</strong></div>
+         <p>Favorite Food<p>
+          <b-form-select v-model="selectedOpt" :options="options" aria-placeholder="Favorite Food"></b-form-select>
+          <div class="mt-3">Choice: <strong>{{ selectedOpt }}</strong></div>
         </div>
       </div>
       <div>
@@ -75,32 +76,67 @@ export default {
   },
   data: () => {
     return {
-      selected: '',
-      selectedOpt: '',
       name: '',
       address: '',
       description: '',
+      selected: '',
+      selectedOpt: '',
       dismissSecs: 5,
       dismissCountDown: 0,
       options: [
           { value: null, text: 'Please select an option' },
-          { value: '1 Opt', text: 'This is First option' },
-          { value: '2 Opt', text: 'Selected Option' },
-          { value: { 3: '3 Opt' }, text: 'This is an option with object value' },
-          { value: '4 Opt', text: 'This one is disabled', disabled: true }
-        ]
+          { value: { 1: 'Lagagna'}, text: 'Lasagna' },
+          { value: { 2: 'Jello'}, text: 'Jello' },
+          { value: { 3: 'PBB'}, text: 'Peanut butter banana sandwich' },
+          { value: { 4: 'Tofu'}, text: 'Tofu', disabled: true }
+        ],
+      disclaimer: "The department cannot guarantee the validity of the information found here. \
+                    While we use reasonable efforts to include accurate and up to date information, \
+                    we make no warranties as to the accuracy of the content and assume no liability \
+                    or resposibility for an error or omission in the content",
+      title: '',
     }
   },
-  methods: {
-    downLoad() {
+  computed: {
 
-    },
+  },
+  methods: {
+    // selected_record: function() {
+    //   return {
+    //     name: this.name,
+    //     address: this.address,
+    //     description: this.description,
+    //     selected: this.selected,
+    //     selectedOpt: this.selectedOpt,
+    //   }
+    // },
+  clearForm() {
+    return (
+          this.name = '',
+          this.address = '',
+          this.description ='',
+          this.selected = '',
+          this.selectedOpt =''
+    )
+	},
     makePdf() {
       this.showAlert();// alert('PDF Downloading Please wait...')
       console.log('Making PDF');
-      const doc = new jspdf();
-      doc.text(this.name, 15,15);
+      const doc = new jspdf({
+        // orientation: "portrait",
+        // unit: "in",
+        // format: "letter"
+      });
+      // doc.text(this.name, 15,15);
+      doc.text(this.name +"'s PDF" , 15, 10);
+      doc.text('Name: ' + this.name, 15,25);
+      doc.text('Address: ' + this.address, 15,35);
+      doc.text('Description: ' + this.description, 15,45);
+      doc.text('Sex: ' + this.selected, 15,55);
+      doc.text('Favorite Food: ' + this.selectedOpt, 15,65);
+      doc.text(this.disclaimer, 15, 85);
       doc.save(this.name +'.pdf');
+      this.clearForm();
     },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown
