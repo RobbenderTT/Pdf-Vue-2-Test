@@ -1,7 +1,7 @@
 <template>
 <b-container>
   <div class="">
-    <h2 id="title" ref="content">Somebody's PDF</h2>
+    <h2 id="title" ref="content">PDF Form Maker</h2>
   <b-row>
     <b-col>
       <b-alert 
@@ -13,7 +13,7 @@
           >Generating your PDF, please wait...</b-alert>
       <div id="app">
         <!-- <h5>Please fill out all fields</h5> -->
-        <b-button variant='success' @click="makePdf">Make PDF</b-button>
+        <b-button variant='success' @click="makePdf">Download</b-button>
       </div>
       <div>
         <b-form-group id="fieldset-name">
@@ -38,9 +38,9 @@
       <br>
       <br>
       <div class="text-left">
-          <b-form-group label="Sex" v-slot="{ ariaDescribedby }">
-            <b-form-radio v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="M">Male</b-form-radio>
-            <b-form-radio v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="F">Female</b-form-radio>
+          <b-form-group label="Do you like pistachio ice cream?" v-slot="{ ariaDescribedby }">
+            <b-form-radio v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="Yes">Yes</b-form-radio>
+            <b-form-radio v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="No">No</b-form-radio>
           </b-form-group>
           <div class="mt-3">Choice: <strong>{{ selected }}</strong></div>
         <br>
@@ -49,6 +49,11 @@
           <b-form-select v-model="selectedOpt" :options="options" aria-placeholder="Favorite Food"></b-form-select>
           <div class="mt-3">Choice: <strong>{{ selectedOpt }}</strong></div>
         </div>
+      </div>
+      <br>
+      <br>
+      <div>
+        <p id="print" ref="content" class="text-left">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sed earum nostrum laborum laboriosam cumque exercitationem sapiente voluptatibus. Provident praesentium, voluptatibus sint commodi porro aliquid fugit necessitatibus ut asperiores, aliquam nisi!</p>
       </div>
       <div>
            <b-button-group>
@@ -85,15 +90,13 @@ export default {
       dismissCountDown: 0,
       options: [
           { value: null, text: 'Please select an option' },
-          { value: { 1: 'Lagagna'}, text: 'Lasagna' },
-          { value: { 2: 'Jello'}, text: 'Jello' },
-          { value: { 3: 'PBB'}, text: 'Peanut butter banana sandwich' },
-          { value: { 4: 'Tofu'}, text: 'Tofu', disabled: true }
+          { value: 'Lagagna', text: 'lasagna' },
+          { value: 'Jello', text: 'Jello' },
+          { value: 'Jam Sammy', text: 'jam sammy' },
+          { value: 'Tofu', text: 'Tofu', disabled: true }
         ],
-      disclaimer: "The department cannot guarantee the validity of the information found here. \
-                    While we use reasonable efforts to include accurate and up to date information, \
-                    we make no warranties as to the accuracy of the content and assume no liability \
-                    or resposibility for an error or omission in the content",
+      disclaimer: "The department is not responsible for the information found here.",
+                   
       title: '',
     }
   },
@@ -111,13 +114,13 @@ export default {
     //   }
     // },
   clearForm() {
-    return (
-          this.name = '',
-          this.address = '',
-          this.description ='',
-          this.selected = '',
-          this.selectedOpt =''
-    )
+    // return 
+    //       this.name = '',
+    //       this.address = '',
+    //       this.description ='',
+    //       this.selected = '',
+    //       this.selectedOpt ='',
+  
 	},
     makePdf() {
       this.showAlert();// alert('PDF Downloading Please wait...')
@@ -127,13 +130,19 @@ export default {
         // unit: "in",
         // format: "letter"
       });
-      // doc.text(this.name, 15,15);
+
+      // const contentHtml = this.$refs.content.innerHTML;
+      // const sourceTag = window.document.getElementsByTagName("body")[0];
+      // const sourceItem = window.document.getElementsById("print")[0];
+      
+      // doc.fromHTML(contentHtml,15,15, {'width': 180,'elementHandlers': elementHandler});
       doc.text(this.name +"'s PDF" , 15, 10);
       doc.text('Name: ' + this.name, 15,25);
       doc.text('Address: ' + this.address, 15,35);
       doc.text('Description: ' + this.description, 15,45);
-      doc.text('Sex: ' + this.selected, 15,55);
+      doc.text('Do you like pistachio ice cream?: ' + this.selected, 15,55);
       doc.text('Favorite Food: ' + this.selectedOpt, 15,65);
+      // doc.fromHTML(contentHtml, 15, 15,);
       doc.text(this.disclaimer, 15, 85);
       doc.save(this.name +'.pdf');
       this.clearForm();
@@ -144,7 +153,8 @@ export default {
     showAlert() {
         // console.log('Show Alert');
         this.dismissCountDown = this.dismissSecs
-      }
+    },
+    
   },
 }
 </script>
